@@ -144,7 +144,7 @@ public class DiscountServiceTest {
         drive.setExitedAt(LocalDateTime.of(2016, 4, 2, 11, 0));
         drive.setDriver(driver(10));
         drive.setVehicleFamily(STANDARD);
-        drive.setRouteType(URBAN);
+        drive.setRouteType(RURAL);
 
         assertThat(discountService.calc(drive)).isEqualTo(30);
     }
@@ -243,7 +243,7 @@ public class DiscountServiceTest {
         drive.setVehicleFamily(STANDARD);
         drive.setRouteType(RURAL);
 
-        assertThat(discountService.calc(drive)).isEqualTo(50);
+        assertThat(discountService.calc(drive)).isEqualTo(30);
     }
 
     @Test
