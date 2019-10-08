@@ -1,19 +1,22 @@
 package kata.ex01.discount;
 
 import kata.ex01.model.HighwayDrive;
-import kata.ex01.model.RouteType;
-import kata.ex01.model.VehicleFamily;
-import kata.ex01.util.HolidayUtils;
+import kata.ex01.rule.Rule;
 
 public class HolidaysDiscount {
-    public long a (HighwayDrive drive) {
-        // 休日割引
-        if(HolidayUtils.isHoliday(drive.getEnteredAt().toLocalDate()) ||  HolidayUtils.isHoliday(drive.getExitedAt().toLocalDate())) {
-            if (drive.getVehicleFamily() != VehicleFamily.OTHER && drive.getRouteType() == RouteType.RURAL) {
-                return 30;
-            }
-        }
 
+  private Rule[] rules;
+
+  public HolidaysDiscount(Rule... rules) {
+    this.rules = rules;
+  }
+
+  public long getRate(HighwayDrive drive) {
+    for (Rule rule : rules) {
+      if (!rule.isDiscount(drive)) {
         return 0;
+      }
     }
+    return 30;
+  }
 }
