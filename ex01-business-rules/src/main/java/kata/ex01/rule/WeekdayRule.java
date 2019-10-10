@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import kata.ex01.model.HighwayDrive;
+import kata.ex01.util.HolidayUtils;
 
 public class WeekdayRule implements Rule {
 
@@ -12,11 +13,11 @@ public class WeekdayRule implements Rule {
     WeekdayMorningRule morningRule = new WeekdayMorningRule();
     WeekdayEveningRule eveningRule = new WeekdayEveningRule();
 
-    return morningRule.isDiscount(drive) || eveningRule.isDiscount(drive);
+    return isWeekDays(drive) && (morningRule.isDiscount(drive) || eveningRule.isDiscount(drive));
   }
 
   boolean isRunningTargetHour(HighwayDrive drive, int startHour, int endHour) {
-    LocalDate targetDate = drive.getEnteredAt().getHour() <= startHour ?
+    LocalDate targetDate = drive.getEnteredAt().getHour() <= endHour ?
         drive.getEnteredAt().toLocalDate() :
         drive.getExitedAt().toLocalDate();
 
@@ -31,5 +32,9 @@ public class WeekdayRule implements Rule {
     );
 
     return drive.getEnteredAt().isBefore(end) && drive.getExitedAt().isAfter(start);
+  }
+
+  private boolean isWeekDays(HighwayDrive drive) {
+    return !HolidayUtils.isHoliday(drive.getEnteredAt().toLocalDate()) || !HolidayUtils.isHoliday(drive.getExitedAt().toLocalDate());
   }
 }

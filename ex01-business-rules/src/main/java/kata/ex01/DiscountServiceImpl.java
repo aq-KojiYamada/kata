@@ -7,14 +7,11 @@ import kata.ex01.discount.HolidaysDiscount;
 import kata.ex01.discount.MidnightDiscount;
 import kata.ex01.discount.WeekdaysDiscount;
 import kata.ex01.model.HighwayDrive;
-import kata.ex01.model.RouteType;
-import kata.ex01.model.VehicleFamily;
+import kata.ex01.rule.HolidaysRule;
+import kata.ex01.rule.MidnightRule;
 import kata.ex01.rule.RouteTypeRule;
 import kata.ex01.rule.VehicleRule;
 import kata.ex01.rule.WeekdayRule;
-import kata.ex01.util.HolidayUtils;
-
-import java.time.LocalTime;
 
 /**
  * @author kawasima
@@ -27,23 +24,25 @@ public class DiscountServiceImpl implements DiscountService {
 
     WeekdaysDiscount weekdaysDiscount = new WeekdaysDiscount(
         new WeekdayRule(),
-        new VehicleRule(),
         new RouteTypeRule()
     );
 
     discountRateList.add(weekdaysDiscount.getRate(drive));
 
-    return Collections.max(discountRateList);
+    HolidaysDiscount holidaysDiscount = new HolidaysDiscount(
+        new HolidaysRule(),
+        new VehicleRule(),
+        new RouteTypeRule()
+    );
 
-//        HolidaysDiscount holidaysDiscount = new HolidaysDiscount();
-//        MidnightDiscount midnightDiscount = new MidnightDiscount();
-//
-//        long discountRate = 0;
-//
-//        discountRate = Math.max(discountRate, holidaysDiscount.a(drive));
-//
-//        discountRate = Math.max(discountRate, midnightDiscount.a(drive));
-//
-//        return discountRate;
+    discountRateList.add(holidaysDiscount.getRate(drive));
+
+    MidnightDiscount midnightDiscount = new MidnightDiscount(
+        new MidnightRule()
+    );
+
+    discountRateList.add(midnightDiscount.getRate(drive));
+
+    return Collections.max(discountRateList);
   }
 }
