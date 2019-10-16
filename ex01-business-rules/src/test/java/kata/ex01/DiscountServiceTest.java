@@ -2,11 +2,13 @@ package kata.ex01;
 
 import kata.ex01.model.Driver;
 import kata.ex01.model.HighwayDrive;
+import kata.ex01.model.RoadType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static kata.ex01.model.RoadType.KENO_DO;
 import static kata.ex01.model.RouteType.RURAL;
 import static kata.ex01.model.RouteType.URBAN;
 import static kata.ex01.model.VehicleFamily.OTHER;
@@ -304,5 +306,44 @@ public class DiscountServiceTest {
         drive.setRouteType(URBAN);
 
         assertThat(discountService.calc(drive)).isEqualTo(30);
+    }
+
+    @Test
+    public void test圏央道割引適用() {
+        HighwayDrive drive = new HighwayDrive();
+        drive.setEnteredAt(LocalDateTime.of(2016, 4, 2, 10, 0));
+        drive.setExitedAt(LocalDateTime.of(2016, 4, 2, 11, 0));
+        drive.setDriver(driver(10));
+        drive.setVehicleFamily(OTHER);
+        drive.setRouteType(RURAL);
+        drive.setRoadType(KENO_DO);
+
+        assertThat(discountService.calc(drive)).isEqualTo(20);
+    }
+
+    @Test
+    public void test圏央道割引適用されない() {
+        HighwayDrive drive = new HighwayDrive();
+        drive.setEnteredAt(LocalDateTime.of(2016, 4, 2, 10, 0));
+        drive.setExitedAt(LocalDateTime.of(2016, 4, 2, 11, 0));
+        drive.setDriver(driver(10));
+        drive.setVehicleFamily(OTHER);
+        drive.setRouteType(RURAL);
+        drive.setRoadType(RoadType.OTHER);
+
+        assertThat(discountService.calc(drive)).isEqualTo(0);
+    }
+
+    @Test
+    public void test平日朝夕50と圏央道割の両方適用() {
+        HighwayDrive drive = new HighwayDrive();
+        drive.setEnteredAt(LocalDateTime.of(2016, 3, 31, 23, 0));
+        drive.setExitedAt(LocalDateTime.of(2016, 4, 1, 6, 30));
+        drive.setDriver(driver(10));
+        drive.setVehicleFamily(STANDARD);
+        drive.setRouteType(RURAL);
+        drive.setRoadType(KENO_DO);
+
+        assertThat(discountService.calc(drive)).isEqualTo(50);
     }
 }

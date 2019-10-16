@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import kata.ex01.discount.HolidaysDiscount;
+import kata.ex01.discount.KenoDoDiscount;
 import kata.ex01.discount.MidnightDiscount;
 import kata.ex01.discount.WeekdaysDiscount;
 import kata.ex01.model.HighwayDrive;
-import kata.ex01.rule.HolidaysRule;
-import kata.ex01.rule.MidnightRule;
-import kata.ex01.rule.RouteTypeRule;
-import kata.ex01.rule.VehicleRule;
-import kata.ex01.rule.WeekdayRule;
+import kata.ex01.rule.*;
 
 /**
  * @author kawasima
@@ -42,6 +39,12 @@ public class DiscountServiceImpl implements DiscountService {
     );
 
     discountRateList.add(midnightDiscount.getRate(drive));
+
+    KenoDoDiscount kenoDoDiscount = new KenoDoDiscount(
+            new RoadTypeRule()
+    );
+
+    discountRateList.add(kenoDoDiscount.getRate(drive));
 
     return Collections.max(discountRateList);
   }
